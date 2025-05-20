@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulário Equipe LOG</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .slide, #form-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+      max-width: 600px;
+      background: rgba(0, 0, 0, 0.75);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    h1, h2 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #1e90ff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #005cbf;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SLIDES -->
+  <div id="slide1" class="slide active">
+    <h1>📝 Formulário para a Equipe Log</h1>
+    <p>Seja bem-vindo! Este é o formulário oficial da Equipe de Logs.</p>
+  </div>
+
+  <div id="slide2" class="slide">
+    <h2>📋 Regras:</h2>
+    <ul style="text-align:left;">
+      <li>Não cole respostas prontas</li>
+      <li>Seja honesto sobre suas experiências</li>
+      <li>Responda com atenção</li>
+    </ul>
+  </div>
+
+  <div id="slide3" class="slide">
+    <h2>✅ Pronto para começar?</h2>
+    <button onclick="iniciarFormulario()">Iniciar</button>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div id="form-container">
+    <h1>Formulário Equipe LOG</h1>
+    <form id="logForm">
+      <div id="pergunta-container"></div>
+      <button type="button" id="nextButton">Próxima Pergunta</button>
+    </form>
+  </div>
+
+  <script>
+    // Slides automáticos
+    const slides = [document.getElementById("slide1"), document.getElementById("slide2"), document.getElementById("slide3")];
+    let slideIndex = 0;
+
+    function mostrarSlide(index) {
+      slides.forEach(slide => slide.classList.remove("active"));
+      slides[index].classList.add("active");
+    }
+
+    setInterval(() => {
+      slideIndex++;
+      if (slideIndex < slides.length) mostrarSlide(slideIndex);
+    }, 3000); // 3 segundos por slide
+
+    function iniciarFormulario() {
+      slides.forEach(slide => slide.style.display = "none");
+      document.getElementById("form-container").style.display = "flex";
+      mostrarPergunta(0);
+    }
+
+    // Formulário
+    const perguntas = [
+      { label: "Nome + ID Discord:", name: "nome_id", type: "text" },
+      { label: "Qual seu horário disponível pra ajudar na log?", name: "horario", type: "text" },
+      { label: "Atua em alguma área da staff? Se sim, quais?", name: "area_staff", type: "text" },
+      { label: "Já teve experiência como Equipe. LOG? Se sim, me diga mais sobre.", name: "experiencia_log", type: "textarea" },
+      { label: "Pra que serve o comando hackperma? E quando ele deve ser usado?", name: "hackperma", type: "textarea" },
+      { label: "Em quais situações o propmanager seria ideal para achar hacker?", name: "propmanager", type: "textarea" },
+      { label: "Pra que serve o delobjs? E em quais situações seria necessário usá-lo?", name: "delobjs", type: "textarea" },
+      { label: "Pra que serve o forcedelete? E porque ele pode ser usado quando o delobjs não funcionar?", name: "forcedelete", type: "textarea" },
+      { label: "Como você poderia achar o hack que usa função do mod menu pra falar alto?", name: "modmenu", type: "textarea" },
+      { label: "Se você banir um hacker e ele não for kikado da cidade, o que você poderia fazer?", name: "ban_nao_kickado", type: "textarea" },
+      { label: "Se você ver um hacker zaralhando na cidade, o que você faria?", name: "hacker_zaralho", type: "textarea" },
+      { label: "Está ciente que terá uma meta semanal de 50 banimentos?", name: "meta", type: "select", options: ["Sim", "Não"] },
+      { label: "Se alguém te marcar num ticket falando que o dinheiro dele sumiu, o que você faria?", name: "ticket_dinheiro", type: "textarea" }
+    ];
+
+    let current = 0;
+    const container = document.getElementById("pergunta-container");
+    const nextButton = document.getElementById("nextButton");
+    const respostas = {};
+
+    function mostrarPergunta(index) {
+      const pergunta = perguntas[index];
+      container.innerHTML = "";
+      const label = document.createElement("label");
+      label.textContent = pergunta.label;
+      container.appendChild(label);
+
+      let input;
+      if (pergunta.type === "textarea") {
+        input = document.createElement("textarea");
+      } else if (pergunta.type === "select") {
+        input = document.createElement("select");
+        pergunta.options.forEach(opt => {
+          const option = document.createElement("option");
+          option.value = opt;
+          option.textContent = opt;
+          input.appendChild(option);
+        });
+      } else {
+        input = document.createElement("input");
+        input.type = "text";
+      }
+
+      input.name = pergunta.name;
+      input.required = true;
+      container.appendChild(input);
+    }
+
+    nextButton.addEventListener("click", () => {
+      const input = container.querySelector("input, textarea, select");
+      if (input && input.value.trim() !== "") {
+        respostas[perguntas[current].label] = input.value.trim();
+        current++;
+        if (current < perguntas.length) {
+          mostrarPergunta(current);
+        } else {
+          enviarParaWebhook(respostas);
+          container.innerHTML = "<h2>✅ Formulário enviado com sucesso!</h2>";
+          nextButton.style.display = "none";
+        }
+      } else {
+        alert("Por favor, responda antes de continuar.");
+      }
+    });
+
+    // Enviar respostas para Discord Webhook
+    function enviarParaWebhook(respostas) {
+      const fields = Object.entries(respostas).map(([pergunta, resposta]) => ({
+        name: pergunta,
+        value: resposta || "Sem resposta",
+        inline: false
+      }));
+
+      const payload = {
+        embeds: [{
+          title: "📨 Nova Resposta - Formulário Equipe LOG",
+          color: 3447003,
+          fields: fields,
+          timestamp: new Date()
+        }]
+      };
+
+      fetch("https://discord.com/api/webhooks/1374172908804374639/vjh2jNdi4AwfVHcUljAznB2P_hEZDNplrpUK80CiOpnqXXzmbq4rlN1vY9pqZvk7EGxs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário Equipe LOG</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="slide-container" id="intro">
+    <div class="slide active">
+      <h1>FORMULÁRIO EQUIPE LOG</h1>
+      <p>Este formulário é exclusivo para avaliação da Equipe LOG.</p>
+    </div>
+    <div class="slide">
+      <h2>REGRAS</h2>
+      <ul>
+        <li>⛔ Você NÃO pode colar nada nas respostas.</li>
+        <li>❌ Você NÃO poderá voltar ou refazer o formulário.</li>
+        <li>⚠️ Se for descoberto que colou, o formulário será anulado.</li>
+        <li>⏱️ Você tem 12 minutos para finalizar.</li>
+      </ul>
+    </div>
+    <div class="slide">
+      <h2>Está pronto?</h2>
+      <button onclick="startForm()">Iniciar Formulário</button>
+    </div>
+  </div>
+
+  <form id="form" class="hidden" onsubmit="submitForm(event)">
+    <div id="question-container"></div>
+    <button type="button" id="nextBtn" onclick="nextQuestion()">Próxima</button>
+    <button type="submit" id="submitBtn" class="hidden">Enviar</button>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>
